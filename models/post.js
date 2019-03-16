@@ -9,8 +9,8 @@ const postSchema = new Schema({
   location: String,
   lat: Number,
   long: Number,
-  authon: {
-    Type: Schema.Types.ObjectId,
+  author: {
+    type: Schema.Types.ObjectId,
     ref: 'User'
   },
   reviews: [
