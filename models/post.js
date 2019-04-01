@@ -5,10 +5,14 @@ const postSchema = new Schema({
   title: String,
   price: String,
   description: String,
-  images: [String],
+  images: [
+    {
+      url: String,
+      public_id: String
+    }
+  ],
   location: String,
-  lat: Number,
-  long: Number,
+  coordinates: Array,
   author: {
     type: Schema.Types.ObjectId,
     ref: 'User'
