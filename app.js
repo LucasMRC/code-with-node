@@ -1,4 +1,4 @@
-// Require dependencies ====================================================================
+// Require dependencies ====================================
 
 require("dotenv").config();
 
@@ -14,7 +14,7 @@ const createError = require("http-errors"),
    methodOverride = require("method-override"),
          mongoose = require("mongoose");
 
-// Require Routes ===========================================================================
+// Require Routes ==========================================
 
 const indexRouter = require('./routes/index'),
       postsRouter = require('./routes/posts'),
@@ -22,7 +22,7 @@ const indexRouter = require('./routes/index'),
 
 const app = express();
 
-// Connect with the database ================================================================
+// Connect with the database ===============================
 
 mongoose.connect('mongodb://localhost:27017/surf-shop-mapbox', {
   useNewUrlParser: true
@@ -34,7 +34,8 @@ db.once('open', function () {
 });
 // use ejs-locals for all ejs templates:
 app.engine('ejs', engine);
-// view engine setup ========================================================================
+
+// view engine setup =======================================
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -46,7 +47,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
-// Configure Passport and Sessions ==========================================================
+// Configure Passport and Sessions =========================
 
 app.use(
   session({
@@ -63,7 +64,7 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Local Variables Middleware
+// Local Variables Middleware ==============================
 
 app.use(function(req, res, next){
   // set default page title
@@ -78,29 +79,31 @@ app.use(function(req, res, next){
   next();
 });
 
-// Mount Routes =============================================================================
+// Mount Routes ============================================
 
 app.use('/', indexRouter);
 app.use('/posts', postsRouter);
 app.use('/posts/:id/reviews', reviewsRouter);
 
-// catch 404 and forward to error handler ===================================================
+// catch 404 and forward to error handler ==================
 
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler ============================================================================
+// error handler ===========================================
 
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // // set locals, only providing error in development
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // // render the error page
+  // res.status(err.status || 500);
+  // res.render('error');
+  console.log(err);
+  req.session.error = err.message;
+  res.redirect('back');
 });
-
 
 module.exports = app;
