@@ -1,31 +1,31 @@
-const Post = require('../models/post');
-const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const Post = require("../models/post");
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
-const cloudinary = require('cloudinary');
+const cloudinary = require("cloudinary");
 cloudinary.config({
-  cloud_name: 'perspectiva',
-  api_key: '243345793276666',
+  cloud_name: "perspectiva",
+  api_key: "243345793276666",
   api_secret: process.env.CLOUDINARY_SECRET
 });
 
 module.exports = {
   /* `GET posts index */
-  async postIndex (req, res, next) {
+  async postIndex(req, res, next) {
     let posts = await Post.find({});
-    res.render('posts/index', { posts });
+    res.render("posts/index", { posts, title: "Posts Index" });
   },
 
   /* GET new post */
-  postNew (req, res, next) {
-    res.render('posts/new');
+  postNew(req, res, next) {
+    return res.render("posts/new", { title: "New Post" });
   },
 
   /* POST create post */
-  async postCreate (req, res, next) {
+  async postCreate(req, res, next) {
     req.body.post.images = [];
     for (const file of req.files) {
       let image = await cloudinary.v2.uploader.upload(file.path, {
-        folder: 'Code-with-Node Course'
+        folder: "Code-with-Node Course"
       });
       req.body.post.images.push({
         url: image.secure_url,
@@ -45,19 +45,19 @@ module.exports = {
   },
 
   /* GET show post */
-  async postShow (req, res, next) {
+  async postShow(req, res, next) {
     let post = await Post.findById(req.params.id);
-    res.render('posts/show', { post });
+    res.render("posts/show", { post });
   },
 
   /* GET edit post */
-  async postEdit (req, res, next) {
+  async postEdit(req, res, next) {
     let post = await Post.findById(req.params.id);
-    res.render('posts/edit', { post });
+    res.render("posts/edit", { post });
   },
 
   /* PUT update post */
-  async postUpdate (req, res, next) {
+  async postUpdate(req, res, next) {
     // find the post by id
     let post = await Post.findById(req.params.id);
     //  check if there's any images for deletion
@@ -82,7 +82,7 @@ module.exports = {
       //  upload images
       for (const file of req.files) {
         let image = await cloudinary.v2.uploader.upload(file.path, {
-          folder: 'Code-with-Node Course'
+          folder: "Code-with-Node Course"
         });
         //  add images to post.images array
         post.images.push({
@@ -112,7 +112,7 @@ module.exports = {
     res.redirect(`/posts/${post.id}`);
   },
   /* DELETE update post */
-  async postDestroy (req, res, next) {
+  async postDestroy(req, res, next) {
     // find post by id
     let post = await Post.findById(req.params.id);
     // get images of the post
@@ -123,6 +123,6 @@ module.exports = {
     // delete post
     await post.remove();
     // redirect to show page
-    res.redirect('/posts');
+    res.redirect("/posts");
   }
 };
