@@ -1,29 +1,30 @@
 // Require dependencies ====================================================================
 
-/* eslint-disable */
-const createError = require("http-errors"),
-  express = require("express"),
-  path = require("path"),
-  cookieParser = require("cookie-parser"),
-  logger = require("morgan"),
-  passport = require("passport"),
-  User = require("./models/user"),
-  session = require("express-session"),
-  mongoose = require("mongoose");
+require("dotenv").config();
 
-/* eslint-enable */
+const createError = require("http-errors"),
+          express = require("express"),
+           engine = require("ejs-mate"),
+             path = require("path"),
+     cookieParser = require("cookie-parser"),
+           logger = require("morgan"),
+         passport = require("passport"),
+             User = require("./models/user"),
+          session = require("express-session"),
+   methodOverride = require("method-override"),
+         mongoose = require("mongoose");
 
 // Require Routes ===========================================================================
 
-const indexRouter = require('./routes/index');
-const postsRouter = require('./routes/posts');
-const reviewsRouter = require('./routes/reviews');
+const indexRouter = require('./routes/index'),
+      postsRouter = require('./routes/posts'),
+    reviewsRouter = require('./routes/reviews');
 
 const app = express();
 
 // Connect with the database ================================================================
 
-mongoose.connect('mongodb://localhost:27017/surf-shop', {
+mongoose.connect('mongodb://localhost:27017/surf-shop-mapbox', {
   useNewUrlParser: true
 });
 const db = mongoose.connection;
@@ -31,7 +32,8 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
   console.log('Connected to the database!');
 });
-
+// use ejs-locals for all ejs templates:
+app.engine('ejs', engine);
 // view engine setup ========================================================================
 
 app.set('views', path.join(__dirname, 'views'));
@@ -39,9 +41,10 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 // Configure Passport and Sessions ==========================================================
 
@@ -59,6 +62,21 @@ passport.use(User.createStrategy());
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+// Local Variables Middleware
+
+app.use(function(req, res, next){
+  // set default page title
+  res.locals.title   = 'Surf Shop';
+  // set success flash message
+  res.locals.success = req.session.success || '';
+  delete req.session.success;
+  // set error flash message
+  res.locals.error = req.session.error || '';
+  delete req.session.error;
+  // continue on to the next function in middleware chain
+  next();
+});
 
 // Mount Routes =============================================================================
 
@@ -83,5 +101,6 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
