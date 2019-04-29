@@ -24,7 +24,7 @@ const app = express();
 
 // Connect with the database ===============================
 
-mongoose.connect('mongodb://localhost:27017/surf-shop-mapbox', {
+mongoose.connect('mongodb://localhost:27017/surf-shop', {
   useNewUrlParser: true
 });
 const db = mongoose.connection;
@@ -68,6 +68,11 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next){
   // set default page title
+  req.user = { 
+    '_id' : '5cb76bff9d0494008acb5c00', 
+    'username' : 'lucas'
+  };
+  res.locals.currentUser = req.user;
   res.locals.title   = 'Surf Shop';
   // set success flash message
   res.locals.success = req.session.success || '';

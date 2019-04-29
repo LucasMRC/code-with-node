@@ -9,18 +9,18 @@ cloudinary.config({
 });
 
 module.exports = {
-  /* `GET posts index */
+   // `GET posts index =====================================
   async postIndex(req, res, next) {
     let posts = await Post.find({});
     res.render("posts/index", { posts, title: "Posts Index" });
   },
 
-  /* GET new post */
+   // GET new post =========================================
   postNew(req, res, next) {
     return res.render("posts/new", { title: "New Post" });
   },
 
-  /* POST create post */
+   // POST create post =====================================
   async postCreate(req, res, next) {
     req.body.post.images = [];
     for (const file of req.files) {
@@ -39,24 +39,33 @@ module.exports = {
         .send();
       req.body.post.coordinates =
         response.body.features[0].geometry.coordinates;
+      console.log(reponse);
     }
     let post = await Post.create(req.body.post);
     res.redirect(`/posts/${post.id}`);
   },
 
-  /* GET show post */
+   // GET show post ========================================
   async postShow(req, res, next) {
-    let post = await Post.findById(req.params.id);
+    let post = await Post.findById(req.params.id).populate({
+      path: 'reviews',
+      options: { sort: { '_id': -1 } },
+      populate: {
+        path: 'author',
+        model: 'User'
+      }
+    });
+    console.log(post);
     res.render("posts/show", { post });
   },
 
-  /* GET edit post */
+   // GET edit post ========================================
   async postEdit(req, res, next) {
     let post = await Post.findById(req.params.id);
     res.render("posts/edit", { post });
   },
 
-  /* PUT update post */
+   // PUT update post ======================================
   async postUpdate(req, res, next) {
     // find the post by id
     let post = await Post.findById(req.params.id);
@@ -111,7 +120,8 @@ module.exports = {
     //  redirect to show page
     res.redirect(`/posts/${post.id}`);
   },
-  /* DELETE update post */
+
+   // DELETE update post ===================================
   async postDestroy(req, res, next) {
     // find post by id
     let post = await Post.findById(req.params.id);
@@ -123,6 +133,7 @@ module.exports = {
     // delete post
     await post.remove();
     // redirect to show page
+    req.session.success = 'Post deleted succesfully!';
     res.redirect("/posts");
   }
 };

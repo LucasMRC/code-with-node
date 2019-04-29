@@ -20,3 +20,17 @@ new mapboxgl.Marker(el)
       .setHTML('<h3>' + post.title + '</h3><p>' + post.location + '</p>')
   )
   .addTo(map);
+
+// Toggle edit review form 
+ 
+  $('.toggle-edit-form').on('click', function() {
+    $(this).text() === 'Edit' ? $(this).text('Cancel') : $(this).text('Edit');
+    $(this).siblings('.edit-review-form').toggle();
+  });
+
+  // Add listener for clearing of rating for edit and new form
+
+  $('.clear-rating').click(function() {
+    $(this).siblings('.input-no-rate').click();
+  });
+

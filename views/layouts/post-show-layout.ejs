@@ -5,10 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title><%= title %></title>
+        <link rel="shortcut icon" href="/images/lucas.jpg">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
         <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js"></script>
         <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/stylesheets/style.css" />
         <link rel="stylesheet" href="/stylesheets/post-show.css" />
+        <link rel="stylesheet" href="/stylesheets/starability-basic-min.css">
+        <script src="http://code.jquery.com/jquery-3.4.0.min.js"  integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="  crossorigin="anonymous"></script>
     </head>
     <body>
 
@@ -19,7 +23,6 @@
         <script>
 
             var post = <%- JSON.stringify(post) %>;  
-            console.log(post);
             
         </script>
 
