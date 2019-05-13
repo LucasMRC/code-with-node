@@ -11,7 +11,11 @@ cloudinary.config({
 module.exports = {
    // `GET posts index =====================================
   async postIndex(req, res, next) {
-    let posts = await Post.find({});
+    let posts = await Post.paginate({}, {
+      page: req.query.page || 1,
+      limit: 10
+    });
+    posts.page = Number(posts.page);
     res.render("posts/index", { posts, title: "Posts Index" });
   },
 
@@ -55,8 +59,8 @@ module.exports = {
         model: 'User'
       }
     });
-    console.log(post);
-    res.render("posts/show", { post });
+    const floorRating = post.calculateAvgRating();
+    res.render("posts/show", { post, floorRating });
   },
 
    // GET edit post ========================================
