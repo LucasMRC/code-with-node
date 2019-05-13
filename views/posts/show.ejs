@@ -5,6 +5,17 @@
     <p><%= post.description %></p>
     <p><%= post.location %></p>
     <div>
+      <% for (let i = 0; i < 5; i++) { %>
+        <% if (i < floorRating) { %>
+          <i class="fas fa-star"></i>
+        <% } else if (i < post.avgRating) { %>
+          <i class="fas fa-star-half-alt"></i>
+        <% } else { %>
+          <i class="far fa-star"></i>
+        <% } %>
+      <% }; %>
+    </div>
+    <div>
       <% post.images.forEach(image => { %>
         <img src="<%= image.url %>" alt="Post Image" width="200px">
       <% }); %>
