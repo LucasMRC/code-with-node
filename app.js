@@ -12,7 +12,10 @@ const createError = require("http-errors"),
              User = require("./models/user"),
           session = require("express-session"),
    methodOverride = require("method-override"),
-         mongoose = require("mongoose");
+         mongoose = require("mongoose"),
+        seedPosts = require('./seeds');
+
+// seedPosts();
 
 // Require Routes ==========================================
 
@@ -69,8 +72,8 @@ passport.deserializeUser(User.deserializeUser());
 app.use(function(req, res, next){
   // set default page title
   req.user = { 
-    '_id' : '5cb76bff9d0494008acb5c00', 
-    'username' : 'lucas'
+    // '_id': '5cb76bff9d0494008acb5c00', 'username': 'lucas'
+    '_id': '5cba4f4e68b7f2006d8928e5', 'username': 'lucas2'
   };
   res.locals.currentUser = req.user;
   res.locals.title   = 'Surf Shop';
