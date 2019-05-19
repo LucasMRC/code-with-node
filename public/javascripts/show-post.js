@@ -1,5 +1,5 @@
 mapboxgl.accessToken =
-  'pk.eyJ1IjoibHVjYXNtcmMiLCJhIjoiY2p0eGRrbzZlMGRqYjQzbXFpdnJmcmsydyJ9.dLiWPWq5MEjvlK6YBZiv7A';
+  'pk.eyJ1IjoibHVjYXNtcmMiLCJhIjoiY2p0dGJvYzN5MTluNDN5bGI4MzBqd3U4aCJ9.OJTadKmZJ3-tuvyjGhtLHg';
 
 var map = new mapboxgl.Map({
   container: 'map',
@@ -21,16 +21,20 @@ new mapboxgl.Marker(el)
   )
   .addTo(map);
 
-// Toggle edit review form 
- 
-  $('.toggle-edit-form').on('click', function() {
-    $(this).text() === 'Edit' ? $(this).text('Cancel') : $(this).text('Edit');
-    $(this).siblings('.edit-review-form').toggle();
-  });
+// Toggle edit review form
 
-  // Add listener for clearing of rating for edit and new form
+$('.toggle-edit-form').on('click', function() {
+  console.log('clicked');
+  $(this).text() === 'Edit' ? $(this).text('Cancel') : $(this).text('Edit');
+  $(this)
+    .siblings('.edit-review-form')
+    .toggle();
+});
 
-  $('.clear-rating').click(function() {
-    $(this).siblings('.input-no-rate').click();
-  });
+// Add listener for clearing of rating for edit and new form
 
+$('.clear-rating').click(function() {
+  $(this)
+    .siblings('.input-no-rate')
+    .click();
+});
