@@ -29,12 +29,12 @@ const app = express();
 // Connect with the database ===============================
 
 mongoose.connect('mongodb://localhost:27017/surf-shop', {
-    useNewUrlParser: true,
+	useNewUrlParser: true
 });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-    console.log('Connected to the database!');
+	console.log('Connected to the database!');
 });
 // use ejs-locals for all ejs templates:
 app.engine('ejs', engine);
@@ -54,11 +54,11 @@ app.use(methodOverride('_method'));
 // Configure Passport and Sessions =========================
 
 app.use(
-    session({
-        secret: 'hang tem dude!',
-        resave: false,
-        saveUninitialized: true,
-    })
+	session({
+		secret: 'hang tem dude!',
+		resave: false,
+		saveUninitialized: true
+	})
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -71,25 +71,25 @@ passport.deserializeUser(User.deserializeUser());
 // Local Variables Middleware ==============================
 
 app.use(function(req, res, next) {
-    // set default page title
-    req.user = {
-        // _id: '5ce199b4f04f444bbe5b4a18',
-        // username: 'lucas'
-        _id: '5ce199cef04f444bbe5b4a19',
-        username: 'lucas2',
-        // _id: '5ce199d6f04f444bbe5b4a1a',
-        // username: 'lucas3'
-    };
-    res.locals.currentUser = req.user;
-    res.locals.title = 'Surf Shop';
-    // set success flash message
-    res.locals.success = req.session.success || '';
-    delete req.session.success;
-    // set error flash message
-    res.locals.error = req.session.error || '';
-    delete req.session.error;
-    // continue on to the next function in middleware chain
-    next();
+	// set default page title
+	req.user = {
+		// _id: '5ce199b4f04f444bbe5b4a18',
+		// username: 'lucas'
+		_id: '5ce199cef04f444bbe5b4a19',
+		username: 'lucas2'
+		// _id: '5ce199d6f04f444bbe5b4a1a',
+		// username: 'lucas3'
+	};
+	res.locals.currentUser = req.user;
+	res.locals.title = 'Surf Shop';
+	// set success flash message
+	res.locals.success = req.session.success || '';
+	delete req.session.success;
+	// set error flash message
+	res.locals.error = req.session.error || '';
+	delete req.session.error;
+	// continue on to the next function in middleware chain
+	next();
 });
 
 // Mount Routes ============================================
@@ -101,22 +101,22 @@ app.use('/posts/:id/reviews', reviewsRouter);
 // catch 404 and forward to error handler ==================
 
 app.use(function(req, res, next) {
-    next(createError(404));
+	next(createError(404));
 });
 
 // error handler ===========================================
 
 app.use(function(err, req, res, next) {
-    // // set locals, only providing error in development
-    // res.locals.message = err.message;
-    // res.locals.error = req.app.get('env') === 'development' ? err : {};
+	// // set locals, only providing error in development
+	// res.locals.message = err.message;
+	// res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // // render the error page
-    // res.status(err.status || 500);
-    // res.render('error');
-    console.log(err);
-    req.session.error = err.message;
-    res.redirect('back');
+	// // render the error page
+	// res.status(err.status || 500);
+	// res.render('error');
+	console.log(err);
+	req.session.error = err.message;
+	res.redirect('back');
 });
 
 module.exports = app;
