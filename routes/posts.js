@@ -1,17 +1,10 @@
 const express = require('express');
 const multer = require('multer');
+
 const upload = multer({ dest: 'uploads/' });
 const router = express.Router();
 const { asyncErrorHandler } = require('../middleware');
-const {
-  postIndex,
-  postNew,
-  postCreate,
-  postShow,
-  postEdit,
-  postUpdate,
-  postDestroy
-} = require('../controllers/posts');
+const { postIndex, postNew, postCreate, postShow, postEdit, postUpdate, postDestroy } = require('../controllers/posts');
 
 /* GET Posts Index */
 router.get('/', asyncErrorHandler(postIndex));

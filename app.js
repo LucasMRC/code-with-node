@@ -1,39 +1,40 @@
 // Require dependencies ====================================
 
-require("dotenv").config();
+require('dotenv').config();
 
-const createError = require("http-errors"),
-          express = require("express"),
-           engine = require("ejs-mate"),
-             path = require("path"),
-     cookieParser = require("cookie-parser"),
-           logger = require("morgan"),
-         passport = require("passport"),
-             User = require("./models/user"),
-          session = require("express-session"),
-   methodOverride = require("method-override"),
-         mongoose = require("mongoose"),
-        seedPosts = require('./seeds');
+const createError = require('http-errors');
+const express = require('express');
+const engine = require('ejs-mate');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const passport = require('passport');
+const session = require('express-session');
+const methodOverride = require('method-override');
+const mongoose = require('mongoose');
+const User = require('./models/user');
 
+// Uncomment to seed the DB
+// const seedPosts = require('./seeds');
 // seedPosts();
 
 // Require Routes ==========================================
 
-const indexRouter = require('./routes/index'),
-      postsRouter = require('./routes/posts'),
-    reviewsRouter = require('./routes/reviews');
+const indexRouter = require('./routes/index');
+const postsRouter = require('./routes/posts');
+const reviewsRouter = require('./routes/reviews');
 
 const app = express();
 
 // Connect with the database ===============================
 
 mongoose.connect('mongodb://localhost:27017/surf-shop', {
-  useNewUrlParser: true
+    useNewUrlParser: true,
 });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-  console.log('Connected to the database!');
+db.once('open', function() {
+    console.log('Connected to the database!');
 });
 // use ejs-locals for all ejs templates:
 app.engine('ejs', engine);
@@ -53,11 +54,11 @@ app.use(methodOverride('_method'));
 // Configure Passport and Sessions =========================
 
 app.use(
-  session({
-    secret: 'hang tem dude!',
-    resave: false,
-    saveUninitialized: true
-  })
+    session({
+        secret: 'hang tem dude!',
+        resave: false,
+        saveUninitialized: true,
+    })
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -69,22 +70,26 @@ passport.deserializeUser(User.deserializeUser());
 
 // Local Variables Middleware ==============================
 
-app.use(function(req, res, next){
-  // set default page title
-  req.user = { 
-    // '_id': '5cb76bff9d0494008acb5c00', 'username': 'lucas'
-    '_id': '5cba4f4e68b7f2006d8928e5', 'username': 'lucas2'
-  };
-  res.locals.currentUser = req.user;
-  res.locals.title   = 'Surf Shop';
-  // set success flash message
-  res.locals.success = req.session.success || '';
-  delete req.session.success;
-  // set error flash message
-  res.locals.error = req.session.error || '';
-  delete req.session.error;
-  // continue on to the next function in middleware chain
-  next();
+app.use(function(req, res, next) {
+    // set default page title
+    req.user = {
+        // _id: '5ce199b4f04f444bbe5b4a18',
+        // username: 'lucas'
+        _id: '5ce199cef04f444bbe5b4a19',
+        username: 'lucas2',
+        // _id: '5ce199d6f04f444bbe5b4a1a',
+        // username: 'lucas3'
+    };
+    res.locals.currentUser = req.user;
+    res.locals.title = 'Surf Shop';
+    // set success flash message
+    res.locals.success = req.session.success || '';
+    delete req.session.success;
+    // set error flash message
+    res.locals.error = req.session.error || '';
+    delete req.session.error;
+    // continue on to the next function in middleware chain
+    next();
 });
 
 // Mount Routes ============================================
@@ -95,23 +100,23 @@ app.use('/posts/:id/reviews', reviewsRouter);
 
 // catch 404 and forward to error handler ==================
 
-app.use(function (req, res, next) {
-  next(createError(404));
+app.use(function(req, res, next) {
+    next(createError(404));
 });
 
 // error handler ===========================================
 
-app.use(function (err, req, res, next) {
-  // // set locals, only providing error in development
-  // res.locals.message = err.message;
-  // res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function(err, req, res, next) {
+    // // set locals, only providing error in development
+    // res.locals.message = err.message;
+    // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // // render the error page
-  // res.status(err.status || 500);
-  // res.render('error');
-  console.log(err);
-  req.session.error = err.message;
-  res.redirect('back');
+    // // render the error page
+    // res.status(err.status || 500);
+    // res.render('error');
+    console.log(err);
+    req.session.error = err.message;
+    res.redirect('back');
 });
 
 module.exports = app;
